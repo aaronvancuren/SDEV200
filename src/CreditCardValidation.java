@@ -5,6 +5,14 @@ public class CreditCardValidation
      */
     public static boolean isValid(long number)
     {
+        // True if valid credit card type (Visa, Master, American Express, Discover)
+        if (prefixMatched(number, 4) || prefixMatched(number, 5) || prefixMatched(number, 37) || prefixMatched(number,
+                                                                                                               6))
+        {
+            // True if sum is divisible by 10
+            return Integer.sum(sumOfDoubleEvenPlace(number), sumOfOddPlace(number)) % 10 == 0;
+        }
+
         return false;
     }
 
@@ -13,7 +21,15 @@ public class CreditCardValidation
      */
     public static int sumOfDoubleEvenPlace(long number)
     {
-        return -1;
+        int sum = 0;
+        String numberStringValue = String.valueOf(number);
+        for (int i = getSize(number) - 2; i >= 0; i -= 2)
+        {
+            int doubledNumber = 2 * Integer.parseInt(numberStringValue.substring(i, i + 1));
+            sum += getDigit(doubledNumber);
+        }
+
+        return sum;
     }
 
     /**
@@ -22,7 +38,14 @@ public class CreditCardValidation
      */
     public static int getDigit(int number)
     {
-        return -1;
+        if (getSize(number) == 2)
+        {
+            String numberStringValue = String.valueOf(number);
+            return Integer.sum(Integer.parseInt(numberStringValue.substring(0, 1)),
+                               Integer.parseInt(numberStringValue.substring(1, 2)));
+        }
+
+        return number;
     }
 
     /**
@@ -30,7 +53,14 @@ public class CreditCardValidation
      */
     public static int sumOfOddPlace(long number)
     {
-        return -1;
+        int sum = 0;
+        String numberStringValue = String.valueOf(number);
+        for (int i = getSize(number) - 1; i >= 1; i -= 2)
+        {
+            sum += Integer.parseInt(numberStringValue.substring(i, i + 1));
+        }
+
+        return sum;
     }
 
     /**
@@ -38,7 +68,7 @@ public class CreditCardValidation
      */
     public static boolean prefixMatched(long number, int d)
     {
-        return false;
+        return getPrefix(number, getSize(d)) == d;
     }
 
     /**
@@ -55,6 +85,11 @@ public class CreditCardValidation
      */
     public static long getPrefix(long number, int k)
     {
-        return -1;
+        if (getSize(number) < k)
+        {
+            return number;
+        }
+
+        return Long.parseLong(String.valueOf(number).substring(0, k));
     }
 }
